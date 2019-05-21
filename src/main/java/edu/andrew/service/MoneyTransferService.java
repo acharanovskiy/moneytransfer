@@ -1,5 +1,6 @@
 package edu.andrew.service;
 
+import edu.andrew.TransferFailedException;
 import edu.andrew.model.Account;
 
 import java.math.BigDecimal;
@@ -7,5 +8,5 @@ import java.math.BigDecimal;
 public interface MoneyTransferService {
     void save(Account account);
     Account findBy(String accountNumber);
-    boolean transfer(String from, String to, BigDecimal amount);
+    void transfer(String from, String to, BigDecimal amount) throws TransferFailedException;
 }

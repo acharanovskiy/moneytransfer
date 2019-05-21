@@ -1,5 +1,6 @@
 package edu.andrew.rest;
 
+import edu.andrew.TransferFailedException;
 import edu.andrew.dao.AccountRepositoryImpl;
 import edu.andrew.model.Account;
 import edu.andrew.service.MoneyTransferService;
@@ -26,7 +27,11 @@ public class MoneyTransferResource {
     @POST
     @Consumes("application/json")
     public Response moneyTransfer(MoneyTransferRequest request) {
-        mtService.transfer(request.getSenderAccount(), request.getReceiverAccount(), request.getAmount());
-        return Response.ok().build();
+        try {
+            mtService.transfer(request.getSenderAccount(), request.getReceiverAccount(), request.getAmount());
+            return Response.ok("Funds successfully transferred.").build();
+        } catch (TransferFailedException e) {
+            return Response.serverError().entity(e.getMessage()).build();
+        }
     }
 }
