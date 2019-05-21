@@ -23,7 +23,9 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     public Account findBy(String accountNumber) {
         EntityManager em = sessionFactory.createEntityManager();
-        return em.find(Account.class, accountNumber);
+        Account account = em.find(Account.class, accountNumber);
+        em.close();
+        return account;
     }
 
     public void save(Account account) {
@@ -31,6 +33,7 @@ public class AccountRepositoryImpl implements AccountRepository {
         em.getTransaction().begin();
         em.persist(account);
         em.getTransaction().commit();
+        em.close();
     }
 
     public Account update(Account account) {

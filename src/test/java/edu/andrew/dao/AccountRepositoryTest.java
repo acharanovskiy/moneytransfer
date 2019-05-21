@@ -1,6 +1,7 @@
 package edu.andrew.dao;
 
 import edu.andrew.model.Account;
+import org.hibernate.Transaction;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,8 +32,10 @@ public class AccountRepositoryTest {
         repository.save(account);
 
         account.setHolder("Warren Buffet");
-        SessionFactoryProvider.getSessionFactory().openSession();
+
+        Transaction tx = SessionFactoryProvider.getSessionFactory().getCurrentSession().beginTransaction();
         repository.update(account);
+        tx.commit();
 
         assertEquals("Warren Buffet", repository.findBy("123456").getHolder());
     }
