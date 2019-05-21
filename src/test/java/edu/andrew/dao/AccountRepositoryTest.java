@@ -1,7 +1,9 @@
 package edu.andrew.dao;
 
 import edu.andrew.model.Account;
+import edu.andrew.util.TestingUtil;
 import org.hibernate.Transaction;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +25,7 @@ public class AccountRepositoryTest {
 
     @Test
     public void testPersisting() {
-        repository.save(accountBuilder().with("1234").with(BigDecimal.ONE).build());
+        repository.save(accountBuilder().with("5400001234").with(BigDecimal.ONE).build());
     }
 
     @Test
@@ -38,5 +40,10 @@ public class AccountRepositoryTest {
         tx.commit();
 
         assertEquals("Warren Buffet", repository.findBy("123456").getHolder());
+    }
+
+    @AfterClass
+    public static void cleanup() {
+        TestingUtil.clearDatabase();
     }
 }

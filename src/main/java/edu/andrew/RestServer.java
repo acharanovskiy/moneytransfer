@@ -1,7 +1,6 @@
 package edu.andrew;
 
 import com.sun.net.httpserver.HttpServer;
-import edu.andrew.dao.SessionFactoryProvider;
 import edu.andrew.rest.MoneyTransferResource;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -26,12 +25,10 @@ public class RestServer {
     public void start() {
         server.start();
         log.info("Service has started.");
-
     }
 
     public void stop() {
         log.info("Shutting down...");
-        SessionFactoryProvider.getSessionFactory().close();
         server.stop(0);
     }
 }

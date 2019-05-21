@@ -5,6 +5,7 @@ import edu.andrew.dao.AccountRepository;
 import edu.andrew.dao.AccountRepositoryImpl;
 import edu.andrew.dao.Database;
 import edu.andrew.model.Account;
+import edu.andrew.util.TestingUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -29,22 +30,22 @@ public class MoneyTransferServiceTest {
 
     @Before
     public void setupAccounts() {
-        Account sender = accountBuilder().with("1234").with(BigDecimal.valueOf(1.23)).build();
-        Account recipient = accountBuilder().with("5678").with(BigDecimal.valueOf(3.21)).build();
+        Account sender = accountBuilder().with("260000").with(BigDecimal.valueOf(1.23)).build();
+        Account recipient = accountBuilder().with("260001").with(BigDecimal.valueOf(3.21)).build();
         transferService.save(sender);
         transferService.save(recipient);
     }
 
     @Test
     public void test1() throws TransferFailedException {
-        transferService.transfer("1234", "5678", BigDecimal.ONE);
+        transferService.transfer("260000", "260001", BigDecimal.ONE);
 
-        assertEquals(BigDecimal.valueOf(0.23), repository.findBy("1234").getFunds().stripTrailingZeros());
-        assertEquals(BigDecimal.valueOf(4.21), repository.findBy("5678").getFunds().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(0.23), repository.findBy("260000").getFunds().stripTrailingZeros());
+        assertEquals(BigDecimal.valueOf(4.21), repository.findBy("260001").getFunds().stripTrailingZeros());
     }
 
     @After
     public void rollback() {
-
+        TestingUtil.clearDatabase();
     }
 }

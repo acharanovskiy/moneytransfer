@@ -10,7 +10,8 @@ public class SessionFactoryProvider {
     private static SessionFactory sessionFactory;
 
     public static SessionFactory getSessionFactory() {
-        if (sessionFactory == null) {
+        if (sessionFactory == null)
+            synchronized (SessionFactoryProvider.class) {
             Configuration configuration = new Configuration();
             configuration.addAnnotatedClass(Account.class);
             ServiceRegistry registry = new StandardServiceRegistryBuilder()

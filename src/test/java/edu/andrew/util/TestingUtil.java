@@ -2,8 +2,10 @@ package edu.andrew.util;
 
 import edu.andrew.dao.AccountRepository;
 import edu.andrew.dao.AccountRepositoryImpl;
+import edu.andrew.dao.SessionFactoryProvider;
 import edu.andrew.model.Account;
 
+import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 
 import static edu.andrew.dao.model.AccountBuilder.accountBuilder;
@@ -19,4 +21,11 @@ public class TestingUtil {
         repository.save(account);
     }
 
+    public static void clearDatabase() {
+        EntityManager em = SessionFactoryProvider.getSessionFactory().createEntityManager();
+        em.getTransaction().begin();
+        em.createNativeQuery("DROP TABLE ACCOUNT").executeUpdate();
+        em.getTransaction().commit();
+        em.close();
+    }
 }
