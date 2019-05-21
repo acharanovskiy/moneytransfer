@@ -1,5 +1,6 @@
 package edu.andrew.service;
 
+import edu.andrew.TransferFailedException;
 import edu.andrew.dao.AccountRepository;
 import edu.andrew.dao.AccountRepositoryImpl;
 import edu.andrew.dao.Database;
@@ -11,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
 
 import static edu.andrew.dao.model.AccountBuilder.accountBuilder;
@@ -36,7 +36,7 @@ public class MoneyTransferServiceTest {
     }
 
     @Test
-    public void test1() {
+    public void test1() throws TransferFailedException {
         transferService.transfer("1234", "5678", BigDecimal.ONE);
 
         assertEquals(BigDecimal.valueOf(0.23), repository.findBy("1234").getFunds().stripTrailingZeros());

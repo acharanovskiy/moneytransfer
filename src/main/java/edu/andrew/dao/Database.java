@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 public final class Database {
+    private static final AccountRepository repository = new AccountRepositoryImpl();
 
     public static void init() {
         EntityManager em = SessionFactoryProvider.getSessionFactory().createEntityManager();
@@ -29,8 +30,8 @@ public final class Database {
         acc2.setFunds(BigDecimal.valueOf(20));
         acc2.setNumber("5678");
 
-        new AccountRepositoryImpl().save(acc1);
-        new AccountRepositoryImpl().save(acc2);
+        repository.save(acc1);
+        repository.save(acc2);
     }
 
     private static String createTableScript() {
