@@ -12,7 +12,7 @@ import org.hibernate.Transaction;
 import java.math.BigDecimal;
 
 public class MoneyTransferServiceImpl implements MoneyTransferService {
-    private static final Logger log =  Logger.getLogger(MoneyTransferServiceImpl.class);
+    private static final Logger log = Logger.getLogger(MoneyTransferServiceImpl.class);
     private SessionFactory sessionFactory;
     private AccountRepository accountRepository;
 
@@ -36,10 +36,12 @@ public class MoneyTransferServiceImpl implements MoneyTransferService {
         Session session = sessionFactory.getCurrentSession();
         Transaction tx = session.beginTransaction();
         try {
-            from.setFunds(from.getFunds().subtract(amount));
-            to.setFunds(to.getFunds().add(amount));
-            accountRepository.update(from);
-            accountRepository.update(to);
+            synchronized (MoneyTransferServiceImpl.class) {
+                from.setFunds(from.getFunds().subtract(amount));
+                to.setFunds(to.getFunds().add(amount));
+                accountRepository.update(from);
+                accountRepository.update(to);
+            }
         } catch (Exception e) {
             tx.rollback();
             log.error(String.format("Failed to transfer money from %s to %s", from, to), e);

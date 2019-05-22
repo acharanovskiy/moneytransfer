@@ -22,6 +22,8 @@ import static org.junit.Assert.assertEquals;
 public class MoneyTransferServiceTest {
     private AccountRepository repository = new AccountRepositoryImpl();
     private MoneyTransferService transferService = new MoneyTransferServiceImpl(repository);
+    private Account sender;
+    private Account recipient;
 
     @BeforeClass
     public static void prepareDB() {
@@ -30,15 +32,15 @@ public class MoneyTransferServiceTest {
 
     @Before
     public void setupAccounts() {
-        Account sender = accountBuilder().with("260000").with(BigDecimal.valueOf(1.23)).build();
-        Account recipient = accountBuilder().with("260001").with(BigDecimal.valueOf(3.21)).build();
+        sender = accountBuilder().with("260000").with(BigDecimal.valueOf(1.23)).build();
+        recipient = accountBuilder().with("260001").with(BigDecimal.valueOf(3.21)).build();
         transferService.save(sender);
         transferService.save(recipient);
     }
 
     @Test
     public void test1() throws TransferFailedException {
-        transferService.transfer("260000", "260001", BigDecimal.ONE);
+        transferService.transfer(sender, recipient, BigDecimal.ONE);
 
         assertEquals(BigDecimal.valueOf(0.23), repository.findBy("260000").getFunds().stripTrailingZeros());
         assertEquals(BigDecimal.valueOf(4.21), repository.findBy("260001").getFunds().stripTrailingZeros());

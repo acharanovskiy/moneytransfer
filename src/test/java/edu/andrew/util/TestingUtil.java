@@ -13,12 +13,13 @@ import static edu.andrew.dao.model.AccountBuilder.accountBuilder;
 public class TestingUtil {
     private static final AccountRepository repository = new AccountRepositoryImpl();
 
-    public static void createAccount(String accountNumber, BigDecimal funds) {
+    public static Account createAccount(String accountNumber, BigDecimal funds) {
         Account account = accountBuilder()
                 .with(accountNumber)
                 .with(funds)
                 .build();
         repository.save(account);
+        return account;
     }
 
     public static void clearDatabase() {
