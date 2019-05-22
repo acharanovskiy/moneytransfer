@@ -8,5 +8,5 @@ import java.math.BigDecimal;
 public interface MoneyTransferService {
     void save(Account account);
     Account findBy(String accountNumber);
-    void transfer(String from, String to, BigDecimal amount) throws TransferFailedException;
+    void transfer(Account from, Account to, BigDecimal amount) throws TransferFailedException;
 }

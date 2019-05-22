@@ -8,6 +8,7 @@ import edu.andrew.service.MoneyTransferServiceImpl;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Path("/rest/account")
@@ -28,10 +29,25 @@ public class MoneyTransferResource {
     @Consumes("application/json")
     public Response moneyTransfer(MoneyTransferRequest request) {
         try {
-            mtService.transfer(request.getSenderAccount(), request.getReceiverAccount(), request.getAmount());
+            Account sender = mtService.findBy(request.getSenderAccount());
+            Account receiver = mtService.findBy(request.getReceiverAccount());
+            validateRequest(sender, receiver, request.getAmount());
+            mtService.transfer(sender, receiver, request.getAmount());
             return Response.ok("Funds successfully transferred.").build();
         } catch (TransferFailedException e) {
             return Response.serverError().entity(e.getMessage()).build();
+        }
+    }
+
+    private void validateRequest(Account sender, Account receiver, BigDecimal amount) throws TransferFailedException {
+        if (sender == null){
+            throw new TransferFailedException("Sender account doesn't exist");
+        }
+        if (receiver == null) {
+            throw new TransferFailedException("Receiver account doesn't exist");
+        }
+        if (sender.getFunds().compareTo(amount) < 0) {
+            throw new TransferFailedException("Not enough funds for this transfer");
         }
     }
 }

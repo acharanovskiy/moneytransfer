@@ -32,16 +32,14 @@ public class MoneyTransferServiceImpl implements MoneyTransferService {
     }
 
     @Override
-    public void transfer(String from, String to, BigDecimal amount) throws TransferFailedException {
+    public void transfer(Account from, Account to, BigDecimal amount) throws TransferFailedException {
         Session session = sessionFactory.getCurrentSession();
         Transaction tx = session.beginTransaction();
         try {
-            Account sender = findBy(from);
-            Account receiver = findBy(to);
-            sender.setFunds(sender.getFunds().subtract(amount));
-            receiver.setFunds(receiver.getFunds().add(amount));
-            accountRepository.update(sender);
-            accountRepository.update(receiver);
+            from.setFunds(from.getFunds().subtract(amount));
+            to.setFunds(to.getFunds().add(amount));
+            accountRepository.update(from);
+            accountRepository.update(to);
         } catch (Exception e) {
             tx.rollback();
             log.error(String.format("Failed to transfer money from %s to %s", from, to), e);
