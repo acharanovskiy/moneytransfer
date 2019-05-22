@@ -49,5 +49,8 @@ public class MoneyTransferResource {
         if (sender.getFunds().compareTo(amount) < 0) {
             throw new TransferFailedException("Not enough funds for this transfer");
         }
+        if (amount.equals(BigDecimal.ZERO)) {
+            throw new TransferFailedException("Amount cannot be zero");
+        }
     }
 }
